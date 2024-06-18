@@ -2,8 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://c2r08etwurihr" path="res://textures/testbed_bg.png" id="1_m32ba"]
 [ext_resource type="Script" path="res://scripts/testbed_ctrl.gd" id="2_v2bx1"]
-[ext_resource type="PackedScene" uid="uid://bown6ajokcrta" path="res://scenes/tiger_sprite.tscn" id="3_jpr32"]
-[ext_resource type="PackedScene" uid="uid://cd1422wux3a6a" path="res://scenes/goat_sprite.tscn" id="4_2edjh"]
+[ext_resource type="PackedScene" path="res://scenes/tiger_sprite.tscn" id="3_jpr32"]
+[ext_resource type="PackedScene" path="res://scenes/goat_sprite.tscn" id="4_2edjh"]
 
 [node name="Node2D" type="Node2D"]
 

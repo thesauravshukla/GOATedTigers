@@ -2,6 +2,8 @@ extends Sprite2D
 
 class_name TestbedCtrl
 
+var bot = mcts.new()
+var board_state = self._make_fresh_board()
 
 
 
@@ -23,10 +25,11 @@ func _make_fresh_board() -> mcts.mcts_node:
 func _ready():
 	pass
 	
-	var bot = mcts.new()
+func _process(delta):
+	board_state = bot.MCTS_SIM(board_state,10)
+	show_game_state(board_state.game_state_array)
 	
-	#show_game_state(bot.MCTS(self._make_fresh_board(), 1))
-	show_game_state(_make_fresh_board().game_state_array)
+
 	
 
 func show_game_state(game_state: Array[String]):
@@ -43,6 +46,9 @@ func show_game_state(game_state: Array[String]):
 			'g':
 				goat.show()
 				tiger.hide()
+			'b':
+				tiger.hide()
+				goat.hide()
 
 
 func explode_string(s: String) -> Array[String]:

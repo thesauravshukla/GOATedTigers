@@ -13,12 +13,7 @@ config_version=5
 config/name="GOATedTigers"
 run/main_scene="res://scenes/testbed.tscn"
 config/features=PackedStringArray("4.2", "Mobile")
-config/icon="res://textures/icon.svg"
-
-[display]
-
-window/size/viewport_width=1920
-window/size/viewport_height=1080
+config/icon="res://icon.svg"
 
 [dotnet]
 

@@ -64,7 +64,8 @@ const tiger_jumps: Array[Array] = \
 	[[21,20],[17,11]]            #22
 ]
 
-func MCTS(board_state: mcts_node,iteration_count: int):
+func MCTS_SIM(board_state: mcts_node,iteration_count: int):
+	var player_type = board_state.player_role
 	for iteration in iteration_count :
 		var leaf_node_finder = board_state
 		
@@ -105,24 +106,26 @@ func MCTS(board_state: mcts_node,iteration_count: int):
 				leaf_node_finder = leaf_node_finder.children[0]
 		
 		#backpropagation for storing reward values obtained from rollout		
-		backpropagation(board_state,leaf_node_finder,rollout(leaf_node_finder))
+		backpropagation(board_state,leaf_node_finder,rollout(leaf_node_finder,player_type))
 		
-		#looking for the next action that maximizes t_i 
-		var max_t_val = board_state.children[0].t
-		var max_t_index = 0
-		for i in range(1,board_state.children.size()):
-			if(board_state.children[i].t > max_t_val):
-				max_t_val = board_state.children[i].t
-				max_t_index = i
+	#looking for the next action that maximizes t_i 
+	var max_t_val = board_state.children[0].t
+	var max_t_index = 0
+	for i in range(1,board_state.children.size()):
+		if(board_state.children[i].t > max_t_val):
+			max_t_val = board_state.children[i].t
+			max_t_index = i
 		
-		#returning the next board state 
-		return board_state.children[max_t_index]
+	#returning the next board state 
+	return board_state.children[max_t_index]
 	
-func backpropagation(board_state: mcts_node, leaf_node: mcts_node, reward: float):
+func backpropagation(root_node: mcts_node, leaf_node: mcts_node, reward: float):
 	var curr_node = leaf_node
-	while(curr_node != board_state):
+	while(1):
 		curr_node.t += reward
 		curr_node.n += 1
+		if(curr_node == root_node):
+			break
 		curr_node = curr_node.parent
 	
 			
@@ -147,7 +150,7 @@ func node_expansion(board_state: mcts_node):
 					child_board_state.game_state_array[i] = 'g'
 					child_board_state.n = 0
 					child_board_state.t = 0
-					child_board_state.children = []
+					child_board_state.children = [] as Array[mcts_node]
 					child_board_state.UCB1 = INF
 					child_board_state.player_role = 't'
 					board_state.children.push_back(child_board_state)
@@ -170,7 +173,7 @@ func node_expansion(board_state: mcts_node):
 				child_board_state.game_state_array[valid_goat_moves[i][1]] = 'g'
 				child_board_state.n = 0
 				child_board_state.t = 0
-				child_board_state.children = []
+				child_board_state.children = [] as Array[mcts_node]
 				child_board_state.UCB1 = INF
 				child_board_state.player_role = 't'
 				board_state.children.push_back(child_board_state)
@@ -194,10 +197,10 @@ func node_expansion(board_state: mcts_node):
 			child_board_state.game_state_array[valid_tiger_moves[i][1]] = 't'			
 			child_board_state.n = 0
 			child_board_state.t = 0
-			child_board_state.children = []
+			child_board_state.children = [] as Array[mcts_node]
 			child_board_state.UCB1 = INF
 			child_board_state.dead_goat_count = board_state.dead_goat_count + valid_tiger_moves[i][2]
-			if(valid_tiger_moves[i][2] == '1'):
+			if(valid_tiger_moves[i][2] == 1):
 				child_board_state.game_state_array[valid_tiger_moves[i][3]] = 'b'
 			child_board_state.player_role = 'g'
 			board_state.children.push_back(child_board_state)
@@ -205,67 +208,78 @@ func node_expansion(board_state: mcts_node):
 			
 
 #Rollout function
-func rollout(current_board_state: mcts_node) -> float:
-	if(is_game_terminated(current_board_state)):
-		return reward(win,loss,draw,current_board_state)
+func rollout(board_state: mcts_node, player_type: String) -> float:
+	if(is_game_terminated(board_state)):
+		return reward(win,loss,draw,board_state, player_type)
+		
+	var copied_board_state = mcts_node.new()
+	copied_board_state.children = board_state.children.duplicate()
+	copied_board_state.dead_goat_count = board_state.dead_goat_count
+	copied_board_state.game_state_array = board_state.game_state_array.duplicate()
+	copied_board_state.move_count = board_state.move_count
+	copied_board_state.n = board_state.n
+	copied_board_state.parent = board_state.parent
+	copied_board_state.player_role = board_state.player_role
+	copied_board_state.t = board_state.t
+	copied_board_state.UCB1 = board_state.UCB1
 	
-	if(current_board_state.player_role == 'g'):
+	if(copied_board_state.player_role == 'g'):
 		var goats_on_board = 0
 		for i in range(23):
-			if(current_board_state.game_state_array[i] == 'g'):
+			if(copied_board_state.game_state_array[i] == 'g'):
 				goats_on_board += 1
-		var total_goats_placed = goats_on_board + current_board_state.dead_goat_count
+		var total_goats_placed = goats_on_board + copied_board_state.dead_goat_count
 		
 		if(total_goats_placed < 15):
 			var blank_indices: Array
 			for i in range(23):
-				if(current_board_state.game_state_array[i] == 'b'):
+				if(copied_board_state.game_state_array[i] == 'b'):
 					blank_indices.push_back(i)
 			var random_index = randi() % (blank_indices.size())
-			current_board_state.game_state_array[blank_indices[random_index]] = 'g'
-			current_board_state.move_count += 1
-			current_board_state.player_role = 't'
-			return rollout(current_board_state)
+			copied_board_state.game_state_array[blank_indices[random_index]] = 'g'
+			copied_board_state.move_count += 1
+			copied_board_state.player_role = 't'
+			return rollout(copied_board_state, player_type)
 				
 		#case for when all goats have been placed	
 		else:
 			var valid_goat_moves: Array[Array]
 			for i in range(23):
-				if(current_board_state.game_state_array[i] == 'g'):
+				if(copied_board_state.game_state_array[i] == 'g'):
 					for j in board_connectivity[i]:
-						if(current_board_state.game_state_array[j] == 'b'):
+						if(copied_board_state.game_state_array[j] == 'b'):
 							valid_goat_moves.push_back([i,j])	#goat can move position i to j
 			var random_move_index = randi() % (valid_goat_moves.size())
-			current_board_state.game_state_array[valid_goat_moves[random_move_index][0]] =  'b'
-			current_board_state.game_state_array[valid_goat_moves[random_move_index][1]] =  'g'
-			current_board_state.move_count += 1
-			current_board_state.player_role = 't'
-			return rollout(current_board_state)
+			copied_board_state.game_state_array[valid_goat_moves[random_move_index][0]] =  'b'
+			copied_board_state.game_state_array[valid_goat_moves[random_move_index][1]] =  'g'
+			copied_board_state.move_count += 1
+			copied_board_state.player_role = 't'
+			return rollout(copied_board_state, player_type)
 				
 	else:
 		var valid_tiger_moves: Array[Array]
 		for i in range(23):
-			if(current_board_state.game_state_array[i] == 't'):
+			if(copied_board_state.game_state_array[i] == 't'):
 				for jump in tiger_jumps[i]:
-					if(current_board_state.game_state_array[jump[0]] == 'g' && current_board_state.game_state_array[jump[1]] == 'b'):
+					if(copied_board_state.game_state_array[jump[0]] == 'g' && copied_board_state.game_state_array[jump[1]] == 'b'):
 						valid_tiger_moves.push_back([i,jump[1],1,jump[0]])
 				for neighbour in board_connectivity[i]:
-					if(current_board_state.game_state_array[neighbour] == 'b'):
+					if(copied_board_state.game_state_array[neighbour] == 'b'):
 						valid_tiger_moves.push_back([i,neighbour,0])
 		var random_move_index = randi() % (valid_tiger_moves.size())
-		current_board_state.game_state_array[valid_tiger_moves[random_move_index][0]] = 'b'
-		current_board_state.game_state_array[valid_tiger_moves[random_move_index][1]] = 't'
-		if(valid_tiger_moves[random_move_index][2] == '1'):
-			current_board_state.game_state_array[valid_tiger_moves[random_move_index][3]] = 'b'
-			current_board_state.dead_goat_count += 1
-		current_board_state.move_count += 1
-		current_board_state.player_role = 'g'
-		return rollout(current_board_state)
+		copied_board_state.game_state_array[valid_tiger_moves[random_move_index][0]] = 'b'
+		copied_board_state.game_state_array[valid_tiger_moves[random_move_index][1]] = 't'
+		if(valid_tiger_moves[random_move_index][2] == 1):
+			copied_board_state.game_state_array[valid_tiger_moves[random_move_index][3]] = 'b'
+			copied_board_state.dead_goat_count += 1
+		copied_board_state.move_count += 1
+		copied_board_state.player_role = 'g'
+		return rollout(copied_board_state, player_type)
 	
 
 #Returns true if game is terminated
-func is_game_terminated(modified_board_state: mcts_node):
-	if(modified_board_state.dead_goat_count >= 5 || modified_board_state.move_count > max_moves || all_tigers_trapped(modified_board_state)):
+func is_game_terminated(board_state: mcts_node):
+	if(board_state.dead_goat_count >= 5 || board_state.move_count > max_moves || all_tigers_trapped(board_state)):
 		return true
 		
 	return false
@@ -280,17 +294,17 @@ func all_tigers_trapped(board_state: mcts_node):
 
 func this_tiger_trapped(board_state: mcts_node, index: int):
 	for j in board_connectivity[index]:
-		if(j == 'b'):
+		if(board_state.game_state_array[j] == 'b'):
 			return false
 	for jump in tiger_jumps[index]:
-		if(jump[1] == 'b'):
+		if(board_state.game_state_array[jump[1]] == 'b'):
 			return false
 	return true
 	
 	
 #Reward function
-func reward(win: float, loss: float, draw: float, board_state: mcts_node):
-	if(board_state.player_role == 'g'):
+func reward(win: float, loss: float, draw: float, board_state: mcts_node, player_type: String):
+	if(player_type == 'g'):
 		if(board_state.dead_goat_count >= 5):
 			return loss
 		elif(board_state.move_count > max_moves):
@@ -298,7 +312,7 @@ func reward(win: float, loss: float, draw: float, board_state: mcts_node):
 		elif(all_tigers_trapped(board_state)):
 			return win
 	
-	elif(board_state.player_role == 't'):
+	elif(player_type == 't'):
 		if(board_state.dead_goat_count >= 5):
 			return win
 		elif(board_state.move_count > max_moves):
@@ -318,6 +332,6 @@ class mcts_node:
 	var dead_goat_count: int
 	var move_count: int
 	var parent: mcts_node
-	var children: Array [mcts_node] = []
+	var children: Array [mcts_node] 
 	var UCB1: float
 	var player_role: String
