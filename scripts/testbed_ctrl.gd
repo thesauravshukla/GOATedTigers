@@ -22,15 +22,11 @@ func _make_fresh_board() -> mcts.mcts_node:
 
 func _ready():
 	pass
-	#var gsa: Array[String] = []
-	#for i in range(23):
-		#gsa.append(game_state_array[i])
-	#print(gsa)		
-	#show_game_state(gsa)
+	
 	var bot = mcts.new()
 	
-	show_game_state(bot.MCTS(self._make_fresh_board(), 1))
-
+	#show_game_state(bot.MCTS(self._make_fresh_board(), 1))
+	show_game_state(_make_fresh_board().game_state_array)
 	
 
 func show_game_state(game_state: Array[String]):
@@ -47,4 +43,11 @@ func show_game_state(game_state: Array[String]):
 			'g':
 				goat.show()
 				tiger.hide()
-				
+
+
+func explode_string(s: String) -> Array[String]:
+	var a: Array[String] = []
+	for i in range(23):
+		a.append(s[i])
+
+	return a
