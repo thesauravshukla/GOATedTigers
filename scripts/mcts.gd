@@ -8,34 +8,35 @@ extends Node
 var max_moves = 50
 var board_connectivity: Array[Array] = \
 [
-	[2,3,4,5],        #0
-	[2,7],            #1 
-	[0,1,3,8],        #2
-	[0,2,4,9],        #3
-	[0,3,5,10],        #4
-	[0,4,6,11],        #5
-	[5,12],            #6
-	[1,8,13],        #7
-	[2,7,9,14],     #8
-	[3,8,10,15],    #9
-	[4,9,11,16],    #10
-	[5,10,12,17],    #11
-	[6,11,18],        #12
-	[7,14],            #13
-	[8,13,15,19],    #14
-	[9,14,16,20],    #15
-	[10,15,17,21],    #16
-	[11,16,18,22],    #17
-	[12,17],        #18
-	[14,20],        #19
-	[15,19,21],        #20
-	[16,20,22],        #21
-	[17,21]            #22
+	[2,3,4,5],        
+	[2,7],            
+	[0,1,3,8],       
+	[0,2,4,9],       
+	[0,3,5,10],        
+	[0,4,6,11],        
+	[5,12],            
+	[1,8,13],        
+	[2,7,9,14],     
+	[3,8,10,15],    
+	[4,9,11,16],    
+	[5,10,12,17],    
+	[6,11,18],        
+	[7,14],            
+	[8,13,15,19],    
+	[9,14,16,20],    
+	[10,15,17,21],    
+	[11,16,18,22],    
+	[12,17],        
+	[14,20],        
+	[15,19,21],        
+	[16,20,22],        
+	[17,21]            
 ]
 
-var win = 1
-var loss = -1
-var draw = 0
+var win = 1		#reward for a win result
+var loss = -1	#reward for a loss result
+var draw = 0	#reward for a draw result
+
 const tiger_jumps: Array[Array] = \
 [
 	[[2,8],[3,9],[4,10],[5,11]],    #0
@@ -66,29 +67,47 @@ const tiger_jumps: Array[Array] = \
 func MCTS(board_state: mcts_node,iteration_count: int):
 	for iteration in iteration_count :
 		var leaf_node_finder = board_state
+		
+		#checking if current node is a leaf node
 		if(board_state.children.is_empty()):
+			
+			#checking if the n_i value for the current 0
 			if(board_state.n == 0):
+				#if yes then rollout on current node
 				leaf_node_finder = board_state
 			else:
+				#if no then do node expansion
 				node_expansion(board_state)
+				
+				#rollout will be carried out on the first children of the current node
 				leaf_node_finder = board_state.children[0]
 			
 		else:
+			#when current node is not a leaf node 
 			while(not leaf_node_finder.children.is_empty()):
+				
+				#finding the child node with maximum UCB1 value
 				var maxUCB1 = board_state.children[0].UCB1
 				var maxIndex = 0
 				for i in range(1,board_state.children.size()):
 					if(board_state.children[i].UCB1 > maxUCB1):
 						maxUCB1 = board_state.children[i].UCB1
 						maxIndex = i
+						
+				#exploring the child node that maximizes the UCB1 value
 				leaf_node_finder = leaf_node_finder.children[maxIndex]
 			
+			#performing node expansion when n_i of current node is not 0
 			if(leaf_node_finder.n != 0):
 				node_expansion(leaf_node_finder)
-				leaf_node_finder = leaf_node_finder.children[0]
 				
+				#rollout will be carried out on first children of current node
+				leaf_node_finder = leaf_node_finder.children[0]
+		
+		#backpropagation for storing reward values obtained from rollout		
 		backpropagation(board_state,leaf_node_finder,rollout(leaf_node_finder))
 		
+		#looking for the next action that maximizes t_i 
 		var max_t_val = board_state.children[0].t
 		var max_t_index = 0
 		for i in range(1,board_state.children.size()):
@@ -96,6 +115,7 @@ func MCTS(board_state: mcts_node,iteration_count: int):
 				max_t_val = board_state.children[i].t
 				max_t_index = i
 		
+		#returning the next board state 
 		return board_state.children[max_t_index]
 	
 func backpropagation(board_state: mcts_node, leaf_node: mcts_node, reward: float):
