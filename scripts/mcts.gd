@@ -312,12 +312,12 @@ func UCB1(board_state: mcts_node):
 
 #MCTS node declaration
 class mcts_node:
-	var game_state_array: Array[String] #indices:0-22(game state), 23(dead goat count), 24(number of moves) 
+	var game_state_array: Array[String]  = []#indices:0-22(game state), 23(dead goat count), 24(number of moves) 
 	var t: float 
 	var n: int
 	var dead_goat_count: int
 	var move_count: int
 	var parent: mcts_node
-	var children: Array [mcts_node]
+	var children: Array [mcts_node] = []
 	var UCB1: float
 	var player_role: String

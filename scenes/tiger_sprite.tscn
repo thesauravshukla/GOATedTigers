@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bown6ajokcrta"]
+
+[ext_resource type="Texture2D" uid="uid://bobnxasf8otej" path="res://textures/tiger_face.png" id="1_g6ss0"]
+
+[node name="TigerSprite" type="Sprite2D"]
+position = Vector2(0.757341, -0.656254)
+scale = Vector2(0.17283, 0.17283)
+texture = ExtResource("1_g6ss0")
