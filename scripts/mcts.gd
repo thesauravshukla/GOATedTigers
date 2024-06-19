@@ -5,7 +5,8 @@ class_name mcts
 extends Node
 
 #constants
-const max_moves: int = 50
+const max_moves: int = 100
+const EPSILON = 0.001
 #rewards
 const win: float = 1	
 const loss: float = -1	
@@ -67,58 +68,36 @@ const tiger_jumps: Array[Array] = \
 
 func MCTS_SIM(board_state: mcts_node,iteration_count: int) -> mcts_node:
 	var player_type = board_state.player_role
+	
 	for iteration in iteration_count :
-		var leaf_node_finder = board_state
+		var root = board_state
+		var leaf = null
 		
-		#checking if current node is a leaf node
-		if(board_state.children.is_empty()):
-			
-			#checking if the n_i value for the current 0
-			if(board_state.n == 0):
-				#if yes then rollout on current node
-				leaf_node_finder = board_state
-			else:
-				#if no then do node expansion
-				node_expansion(board_state)
-				
-				#rollout will be carried out on the first children of the current node
-				leaf_node_finder = board_state.children[0]
-			
-		else:
-			#when current node is not a leaf node 
-			while(not leaf_node_finder.children.is_empty()):
-				
-				#finding the child node with maximum UCB1 value
-				var maxUCB1 = board_state.children[0].UCB1
-				var maxIndex = 0
-				for i in range(1,board_state.children.size()):
-					if(board_state.children[i].UCB1 > maxUCB1):
-						maxUCB1 = board_state.children[i].UCB1
-						maxIndex = i
-						
-				#exploring the child node that maximizes the UCB1 value
-				leaf_node_finder = leaf_node_finder.children[maxIndex]
-			
-			#performing node expansion when n_i of current node is not 0
-			if(leaf_node_finder.n != 0):
-				node_expansion(leaf_node_finder)
-				
-				#rollout will be carried out on first children of current node
-				leaf_node_finder = leaf_node_finder.children[0]
+		var runner = root		
+		while(not runner.children.is_empty()):
+			var f_max_ucb1 = func(acc: float, e: mcts_node) -> float: return max(acc,e.UCB1) 
+			var max_ucb1 = runner.children.reduce(f_max_ucb1, -INF)
+			runner = runner.children.filter(func(x: mcts_node): return x.UCB1 > max_ucb1 - EPSILON).pick_random()
 		
-		#backpropagation for storing reward values obtained from rollout		
-		backpropagation(board_state,leaf_node_finder,rollout(leaf_node_finder,player_type))
+		leaf = runner
+		if(not leaf.children.is_empty() or leaf.n > 1):
+			push_error("tree traversal ended at non-leaf/invalid node")
+		if(leaf.n == 1 and not is_game_terminated(leaf)):
+			node_expansion(leaf)
+			leaf = leaf.children.pick_random() 
+
+		#backpropagation for storing reward values obtained from rollout
+		backpropagation(board_state,leaf,rollout(leaf,player_type))
 		
 	#looking for the next action that maximizes t_i 
-	var max_t_val = board_state.children[0].t
-	var max_t_index = 0
-	for i in range(1,board_state.children.size()):
-		if(board_state.children[i].t > max_t_val):
-			max_t_val = board_state.children[i].t
-			max_t_index = i
-		
+	var f_max_t = func(acc: float, ele: mcts_node) -> float: return max(acc,ele.t) 
+	var max_t = board_state.children.reduce(f_max_t, -INF)
+	var next_board_state = board_state.children.filter(func(x: mcts_node): return x.t > max_t - EPSILON).pick_random()
+	if(next_board_state == null):
+		#game must be in a valid terminal state, inspect
+		breakpoint		
 	#returning the next board state 
-	return board_state.children[max_t_index]
+	return next_board_state
 	
 func backpropagation(root_node: mcts_node, leaf_node: mcts_node, reward_value: float) -> void:
 	var curr_node = leaf_node
@@ -323,10 +302,6 @@ func reward(board_state: mcts_node, player_type: String) -> float:
 	push_error("reward() called on non-terminal state")
 	return 0
 	
-# Calculates UCB1 value
-func UCB1(board_state: mcts_node) -> float:
-	return (board_state.w)/(board_state.n) + 2*sqrt((log(board_state.parent.n)/board_state.n))
-
 #MCTS node declaration
 class mcts_node:
 	var game_state_array: Array[String]  = []#indices:0-22(game state), 23(dead goat count), 24(number of moves) 
@@ -336,5 +311,9 @@ class mcts_node:
 	var move_count: int
 	var parent: mcts_node
 	var children: Array [mcts_node] 
-	var UCB1: float
+	var UCB1: float:
+		get:
+			return t/n + 2*sqrt(log(parent.n if parent else 0) / n)
+		set(v):
+			UCB1 = v
 	var player_role: String
