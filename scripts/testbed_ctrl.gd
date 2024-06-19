@@ -7,13 +7,13 @@ var board_state = self._make_fresh_board()
 
 
 
-func _make_fresh_board() -> mcts.mcts_node:
+func _make_fresh_board() -> mcts_node:
 
-	var board = mcts.mcts_node.new()
+	var board = mcts_node.new()
 	board.game_state_array = ["t", "b", "b", "t", "t", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b"] as Array[String]
 	board.player_role = 'g'
 	board.UCB1 = INF
-	board.children = [] as Array[mcts.mcts_node]
+	board.children = [] as Array[mcts_node]
 	board.parent = null
 	board.move_count = 0
 	board.dead_goat_count = 0
