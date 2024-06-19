@@ -5,37 +5,11 @@ class_name mcts
 extends Node
 
 #constants
-var max_moves = 50
-var board_connectivity: Array[Array] = \
-[
-	[2,3,4,5],        
-	[2,7],            
-	[0,1,3,8],       
-	[0,2,4,9],       
-	[0,3,5,10],        
-	[0,4,6,11],        
-	[5,12],            
-	[1,8,13],        
-	[2,7,9,14],     
-	[3,8,10,15],    
-	[4,9,11,16],    
-	[5,10,12,17],    
-	[6,11,18],        
-	[7,14],            
-	[8,13,15,19],    
-	[9,14,16,20],    
-	[10,15,17,21],    
-	[11,16,18,22],    
-	[12,17],        
-	[14,20],        
-	[15,19,21],        
-	[16,20,22],        
-	[17,21]            
-]
-
-var win = 1		#reward for a win result
-var loss = -1	#reward for a loss result
-var draw = 0	#reward for a draw result
+var epsilon: float = 0.001
+var max_moves: int = 50
+var win_weight: float = 1		#reward for a win result
+var loss_weight: float = -1	#reward for a loss result
+var draw_weight: float = 0	#reward for a draw result
 
 const tiger_jumps: Array[Array] = \
 [
@@ -64,65 +38,106 @@ const tiger_jumps: Array[Array] = \
 	[[21,20],[17,11]]            #22
 ]
 
-func MCTS_SIM(board_state: mcts_node,iteration_count: int):
+var board_connectivity: Array[Array] = \
+[
+	[2,3,4,5],        
+	[2,7],            
+	[0,1,3,8],       
+	[0,2,4,9],       
+	[0,3,5,10],        
+	[0,4,6,11],        
+	[5,12],            
+	[1,8,13],        
+	[2,7,9,14],     
+	[3,8,10,15],    
+	[4,9,11,16],    
+	[5,10,12,17],    
+	[6,11,18],        
+	[7,14],            
+	[8,13,15,19],    
+	[9,14,16,20],    
+	[10,15,17,21],    
+	[11,16,18,22],    
+	[12,17],        
+	[14,20],        
+	[15,19,21],        
+	[16,20,22],        
+	[17,21]            
+]
+
+func MCTS_SIM(board_state: mcts_node,iteration_count: int) -> mcts_node:
+	#if game terminated then return board_state
+	if(is_game_terminated(board_state)):
+		return board_state
+		
 	var player_type = board_state.player_role
 	for iteration in iteration_count :
-		var leaf_node_finder = board_state
+		var leaf = board_state
 		
 		#checking if current node is a leaf node
-		if(board_state.children.is_empty()):
+		if(leaf.children.is_empty()):
 			
-			#checking if the n_i value for the current 0
-			if(board_state.n == 0):
-				#if yes then rollout on current node
-				leaf_node_finder = board_state
-			else:
-				#if no then do node expansion
-				node_expansion(board_state)
+			if(leaf.n != 0):
+				node_expansion(leaf)
 				
 				#rollout will be carried out on the first children of the current node
-				leaf_node_finder = board_state.children[0]
+				leaf = leaf.children[randi() % leaf.children.size()]
 			
 		else:
 			#when current node is not a leaf node 
-			while(not leaf_node_finder.children.is_empty()):
+			while(not leaf.children.is_empty()):
 				
 				#finding the child node with maximum UCB1 value
-				var maxUCB1 = board_state.children[0].UCB1
-				var maxIndex = 0
-				for i in range(1,board_state.children.size()):
-					if(board_state.children[i].UCB1 > maxUCB1):
-						maxUCB1 = board_state.children[i].UCB1
-						maxIndex = i
-						
-				#exploring the child node that maximizes the UCB1 value
-				leaf_node_finder = leaf_node_finder.children[maxIndex]
+				var max_UCB1: float = -INF
+				var max_UCB1_index_list: Array = []
+				for i in range(0,leaf.children.size()):
+					if(leaf.children[i].UCB1 > max_UCB1):
+						max_UCB1 = leaf.children[i].UCB1
+					
+				for i in range(0,leaf.children.size()):
+					print(max_UCB1)
+					print(leaf.children[i].UCB1)
+					if(abs(max_UCB1 - leaf.children[i].UCB1) <= epsilon):
+						max_UCB1_index_list.push_back(i)
+				
+				#choosing a random child from all the children having max_t value		
+				var random_max_UCB1_index = randi() % max_UCB1_index_list.size()
+				
+				#exploring the child node randomly that maximizes the UCB1 value
+				leaf = leaf.children[max_UCB1_index_list[random_max_UCB1_index]]
 			
 			#performing node expansion when n_i of current node is not 0
-			if(leaf_node_finder.n != 0):
-				node_expansion(leaf_node_finder)
+			if(leaf.n != 0):
+				node_expansion(leaf)
 				
 				#rollout will be carried out on first children of current node
-				leaf_node_finder = leaf_node_finder.children[0]
+				leaf = leaf.children[randi() % leaf.children.size()]
 		
 		#backpropagation for storing reward values obtained from rollout		
-		backpropagation(board_state,leaf_node_finder,rollout(leaf_node_finder,player_type))
+		backpropagation(board_state,leaf,rollout(leaf,player_type))
 		
 	#looking for the next action that maximizes t_i 
-	var max_t_val = board_state.children[0].t
-	var max_t_index = 0
-	for i in range(1,board_state.children.size()):
+	var max_t_index_list: Array = []
+	var max_t_val = -INF
+
+	for i in range(0,board_state.children.size()):
 		if(board_state.children[i].t > max_t_val):
 			max_t_val = board_state.children[i].t
-			max_t_index = i
+	
+	for i in range (0,board_state.children.size()):
+		if(abs(board_state.children[i].t - max_t_val) <= epsilon):
+			max_t_index_list.push_back(i)
+	
+	#choosing a random child from all the children having max_t value		
+	var random_max_t_index = randi() % max_t_index_list.size()
 		
 	#returning the next board state 
-	return board_state.children[max_t_index]
+	return board_state.children[max_t_index_list[random_max_t_index]]
 	
-func backpropagation(root_node: mcts_node, leaf_node: mcts_node, reward: float):
+func backpropagation(root_node: mcts_node, leaf_node: mcts_node, rollout_reward: float) -> void:
 	var curr_node = leaf_node
 	while(1):
-		curr_node.t += reward
+		curr_node.t += rollout_reward
 		curr_node.n += 1
 		if(curr_node == root_node):
 			break
@@ -130,7 +145,7 @@ func backpropagation(root_node: mcts_node, leaf_node: mcts_node, reward: float):
 	
 			
 #Node Expansion Function	
-func node_expansion(board_state: mcts_node):
+func node_expansion(board_state: mcts_node) -> void:
 	if(board_state.player_role == 'g'):
 		var goats_on_board = 0
 		for i in range(23):
@@ -139,7 +154,6 @@ func node_expansion(board_state: mcts_node):
 		var total_goats_placed = goats_on_board + board_state.dead_goat_count
 		
 		if(total_goats_placed < 15):
-			var blank_indices: Array
 			for i in range(23):
 				if(board_state.game_state_array[i] == 'b'):
 					var child_board_state = mcts_node.new()
@@ -157,7 +171,7 @@ func node_expansion(board_state: mcts_node):
 					
 		#case for when all goats have been placed	
 		else:
-			var valid_goat_moves: Array[Array]
+			var valid_goat_moves: Array[Array] = []
 			for i in range(23):
 				if(board_state.game_state_array[i] == 'g'):
 					for j in board_connectivity[i]:
@@ -179,7 +193,7 @@ func node_expansion(board_state: mcts_node):
 				board_state.children.push_back(child_board_state)
 				
 	else:
-		var valid_tiger_moves: Array[Array]
+		var valid_tiger_moves: Array[Array] = []
 		for i in range(23):
 			if(board_state.game_state_array[i] == 't'):
 				for jump in tiger_jumps[i]:
@@ -210,7 +224,7 @@ func node_expansion(board_state: mcts_node):
 #Rollout function
 func rollout(board_state: mcts_node, player_type: String) -> float:
 	if(is_game_terminated(board_state)):
-		return reward(win,loss,draw,board_state, player_type)
+		return reward(board_state, player_type)
 		
 	var copied_board_state = mcts_node.new()
 	copied_board_state.children = board_state.children.duplicate()
@@ -231,7 +245,7 @@ func rollout(board_state: mcts_node, player_type: String) -> float:
 		var total_goats_placed = goats_on_board + copied_board_state.dead_goat_count
 		
 		if(total_goats_placed < 15):
-			var blank_indices: Array
+			var blank_indices: Array = []
 			for i in range(23):
 				if(copied_board_state.game_state_array[i] == 'b'):
 					blank_indices.push_back(i)
@@ -243,7 +257,7 @@ func rollout(board_state: mcts_node, player_type: String) -> float:
 				
 		#case for when all goats have been placed	
 		else:
-			var valid_goat_moves: Array[Array]
+			var valid_goat_moves: Array[Array] = []
 			for i in range(23):
 				if(copied_board_state.game_state_array[i] == 'g'):
 					for j in board_connectivity[i]:
@@ -257,7 +271,7 @@ func rollout(board_state: mcts_node, player_type: String) -> float:
 			return rollout(copied_board_state, player_type)
 				
 	else:
-		var valid_tiger_moves: Array[Array]
+		var valid_tiger_moves: Array[Array] = []
 		for i in range(23):
 			if(copied_board_state.game_state_array[i] == 't'):
 				for jump in tiger_jumps[i]:
@@ -278,21 +292,21 @@ func rollout(board_state: mcts_node, player_type: String) -> float:
 	
 
 #Returns true if game is terminated
-func is_game_terminated(board_state: mcts_node):
+func is_game_terminated(board_state: mcts_node) -> bool:
 	if(board_state.dead_goat_count >= 5 || board_state.move_count > max_moves || all_tigers_trapped(board_state)):
 		return true
 		
 	return false
 		
 	
-func all_tigers_trapped(board_state: mcts_node):
+func all_tigers_trapped(board_state: mcts_node) -> bool:
 	for i in range(23):
 		if(board_state.game_state_array[i] == 't'):
 			if(not this_tiger_trapped(board_state,i)):
 				return false;
 	return true
 
-func this_tiger_trapped(board_state: mcts_node, index: int):
+func this_tiger_trapped(board_state: mcts_node, index: int) -> bool:
 	for j in board_connectivity[index]:
 		if(board_state.game_state_array[j] == 'b'):
 			return false
@@ -303,35 +317,43 @@ func this_tiger_trapped(board_state: mcts_node, index: int):
 	
 	
 #Reward function
-func reward(win: float, loss: float, draw: float, board_state: mcts_node, player_type: String):
+func reward(board_state: mcts_node, player_type: String) -> float:
 	if(player_type == 'g'):
 		if(board_state.dead_goat_count >= 5):
-			return loss
+			return loss_weight
 		elif(board_state.move_count > max_moves):
-			return draw
+			return draw_weight
 		elif(all_tigers_trapped(board_state)):
-			return win
+			return win_weight
 	
 	elif(player_type == 't'):
 		if(board_state.dead_goat_count >= 5):
-			return win
+			return win_weight
 		elif(board_state.move_count > max_moves):
-			return draw
+			return draw_weight
 		elif(all_tigers_trapped(board_state)):
-			return loss
+			return loss_weight
+			
+	push_error("reward() called on a non-terminal state")
+	return 0
 	
 # Calculates UCB1 value
-func UCB1(board_state: mcts_node):
-	return (board_state.w)/(board_state.n) + 2*sqrt((log(board_state.parent.n)/board_state.n))
+func UCB1(board_state: mcts_node) -> float:
+	return (board_state.t)/(board_state.n) + 2*sqrt((log(board_state.parent.n)/board_state.n))
 
 #MCTS node declaration
 class mcts_node:
-	var game_state_array: Array[String]  = []#indices:0-22(game state), 23(dead goat count), 24(number of moves) 
+	var game_state_array: Array[String]  = [] #indices:0-22(game state) 
 	var t: float 
 	var n: int
 	var dead_goat_count: int
 	var move_count: int
 	var parent: mcts_node
 	var children: Array [mcts_node] 
-	var UCB1: float
+	var UCB1: float:
+				get:
+					if(n == 0 || !parent || parent.n):
+						return 0
+					else:
+						return t/n + 2*sqrt(log(parent.n if parent else 0) / n)
 	var player_role: String
