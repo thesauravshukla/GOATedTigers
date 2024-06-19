@@ -70,11 +70,12 @@ func MCTS_SIM(board_state: mcts_node,iteration_count: int) -> mcts_node:
 	var player_type = board_state.player_role
 	
 	for iteration in iteration_count :
-		
-		
+				
 		var leaf = _tree_traversal(board_state)
+		
 		if(not leaf.children.is_empty() or leaf.n > 1):
 			push_error("tree traversal ended at non-leaf/invalid node")
+			
 		if(leaf.n == 1 and not is_game_terminated(leaf)):
 			node_expansion(leaf)
 			leaf = leaf.children.pick_random() 
