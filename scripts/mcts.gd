@@ -119,10 +119,10 @@ func MCTS_SIM(board_state: mcts_node,iteration_count: int):
 	#returning the next board state 
 	return board_state.children[max_t_index]
 	
-func backpropagation(root_node: mcts_node, leaf_node: mcts_node, reward: float):
+func backpropagation(root_node: mcts_node, leaf_node: mcts_node, reward_value: float):
 	var curr_node = leaf_node
 	while(1):
-		curr_node.t += reward
+		curr_node.t += reward_value
 		curr_node.n += 1
 		if(curr_node == root_node):
 			break
@@ -139,7 +139,6 @@ func node_expansion(board_state: mcts_node):
 		var total_goats_placed = goats_on_board + board_state.dead_goat_count
 		
 		if(total_goats_placed < 15):
-			var blank_indices: Array
 			for i in range(23):
 				if(board_state.game_state_array[i] == 'b'):
 					var child_board_state = mcts_node.new()
@@ -157,7 +156,7 @@ func node_expansion(board_state: mcts_node):
 					
 		#case for when all goats have been placed	
 		else:
-			var valid_goat_moves: Array[Array]
+			var valid_goat_moves: Array[Array] =[]
 			for i in range(23):
 				if(board_state.game_state_array[i] == 'g'):
 					for j in board_connectivity[i]:
@@ -179,7 +178,7 @@ func node_expansion(board_state: mcts_node):
 				board_state.children.push_back(child_board_state)
 				
 	else:
-		var valid_tiger_moves: Array[Array]
+		var valid_tiger_moves: Array[Array] = []
 		for i in range(23):
 			if(board_state.game_state_array[i] == 't'):
 				for jump in tiger_jumps[i]:
@@ -210,7 +209,7 @@ func node_expansion(board_state: mcts_node):
 #Rollout function
 func rollout(board_state: mcts_node, player_type: String) -> float:
 	if(is_game_terminated(board_state)):
-		return reward(win,loss,draw,board_state, player_type)
+		return reward(board_state, player_type)
 		
 	var copied_board_state = mcts_node.new()
 	copied_board_state.children = board_state.children.duplicate()
@@ -231,7 +230,7 @@ func rollout(board_state: mcts_node, player_type: String) -> float:
 		var total_goats_placed = goats_on_board + copied_board_state.dead_goat_count
 		
 		if(total_goats_placed < 15):
-			var blank_indices: Array
+			var blank_indices: Array = []
 			for i in range(23):
 				if(copied_board_state.game_state_array[i] == 'b'):
 					blank_indices.push_back(i)
@@ -243,7 +242,7 @@ func rollout(board_state: mcts_node, player_type: String) -> float:
 				
 		#case for when all goats have been placed	
 		else:
-			var valid_goat_moves: Array[Array]
+			var valid_goat_moves: Array[Array] = []
 			for i in range(23):
 				if(copied_board_state.game_state_array[i] == 'g'):
 					for j in board_connectivity[i]:
@@ -257,7 +256,7 @@ func rollout(board_state: mcts_node, player_type: String) -> float:
 			return rollout(copied_board_state, player_type)
 				
 	else:
-		var valid_tiger_moves: Array[Array]
+		var valid_tiger_moves: Array[Array] = []
 		for i in range(23):
 			if(copied_board_state.game_state_array[i] == 't'):
 				for jump in tiger_jumps[i]:
@@ -303,7 +302,7 @@ func this_tiger_trapped(board_state: mcts_node, index: int):
 	
 	
 #Reward function
-func reward(win: float, loss: float, draw: float, board_state: mcts_node, player_type: String):
+func reward(board_state: mcts_node, player_type: String):
 	if(player_type == 'g'):
 		if(board_state.dead_goat_count >= 5):
 			return loss

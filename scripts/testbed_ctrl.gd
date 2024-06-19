@@ -25,7 +25,7 @@ func _make_fresh_board() -> mcts.mcts_node:
 func _ready():
 	pass
 	
-func _process(delta):
+func _process(_delta):
 	board_state = bot.MCTS_SIM(board_state,10)
 	show_game_state(board_state.game_state_array)
 	
