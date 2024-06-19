@@ -26,7 +26,7 @@ func _ready():
 	pass
 	
 func _process(_delta):
-	board_state = bot.MCTS_SIM(board_state,1000)
+	board_state = bot.MCTS_SIM(board_state,100)
 	show_game_state(board_state.game_state_array)
 	
 

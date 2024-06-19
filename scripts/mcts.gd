@@ -70,16 +70,9 @@ func MCTS_SIM(board_state: mcts_node,iteration_count: int) -> mcts_node:
 	var player_type = board_state.player_role
 	
 	for iteration in iteration_count :
-		var root = board_state
-		var leaf = null
 		
-		var runner = root		
-		while(not runner.children.is_empty()):
-			var f_max_ucb1 = func(acc: float, e: mcts_node) -> float: return max(acc,e.UCB1) 
-			var max_ucb1 = runner.children.reduce(f_max_ucb1, -INF)
-			runner = runner.children.filter(func(x: mcts_node): return x.UCB1 > max_ucb1 - EPSILON).pick_random()
 		
-		leaf = runner
+		var leaf = _tree_traversal(board_state)
 		if(not leaf.children.is_empty() or leaf.n > 1):
 			push_error("tree traversal ended at non-leaf/invalid node")
 		if(leaf.n == 1 and not is_game_terminated(leaf)):
@@ -93,11 +86,23 @@ func MCTS_SIM(board_state: mcts_node,iteration_count: int) -> mcts_node:
 	var f_max_t = func(acc: float, ele: mcts_node) -> float: return max(acc,ele.t) 
 	var max_t = board_state.children.reduce(f_max_t, -INF)
 	var next_board_state = board_state.children.filter(func(x: mcts_node): return x.t > max_t - EPSILON).pick_random()
+	
 	if(next_board_state == null):
 		#game must be in a valid terminal state, inspect
 		breakpoint		
-	#returning the next board state 
+	
 	return next_board_state
+	
+func _tree_traversal(root: mcts_node):
+	var runner = root		
+	while(not runner.children.is_empty()):
+		var f_max_ucb1 = func(acc: float, e: mcts_node) -> float: return max(acc,e.UCB1) 
+		var max_ucb1 = runner.children.reduce(f_max_ucb1, -INF)
+		runner = runner.children.filter(func(x: mcts_node): return x.UCB1 > max_ucb1 - EPSILON).pick_random()
+	
+	var leaf = runner
+	assert(leaf.children.is_empty())
+	return runner
 	
 func backpropagation(root_node: mcts_node, leaf_node: mcts_node, reward_value: float) -> void:
 	var curr_node = leaf_node
