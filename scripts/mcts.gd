@@ -238,11 +238,11 @@ func reward(board_state: mcts_node, player_type: String) -> float:
 	
 	elif(player_type == 't'):
 		if(board_state.dead_goat_count >= 5):
-			return win_weight
+			return 0
 		elif(board_state.move_count > board_utils.max_moves):
-			return draw_weight
+			return 0
 		elif(board_utils.all_tigers_trapped(board_state)):
-			return loss_weight
+			return 1
 			
 	push_error("reward() called on a non-terminal state")
 	return 0

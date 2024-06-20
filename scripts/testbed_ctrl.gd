@@ -45,20 +45,20 @@ func _process(_delta):
 		false: board = tiger.MCTS_SIM(board, 100)
 	flipflop  = !flipflop
 	'''
-	
+	board = bot.MCTS_SIM(board,1000)
 	show_game_state(board.game_state_array)
 
-	match flipflop:
-		true:
-			board = tiger.MCTS_SIM(board, 1000)
-			flipflop = !flipflop
-			print("goat moved")
-		false:
-			if (drop_at != -1 and pick_from != -1):
-				if (board_utils.is_valid_move(board, pick_from, drop_at)):
-					board = board_utils.make_next_board(board, pick_from, drop_at)
-					flipflop = !flipflop
-					print("tiger moved")
+	#match flipflop:
+		#true:
+			#board = bot.MCTS_SIM(board, 10000)
+			#flipflop = !flipflop
+			#print("goat moved")
+		#false:
+			#if (drop_at != -1 and pick_from != -1):
+				#if (board_utils.is_valid_move(board, pick_from, drop_at)):
+					#board = board_utils.make_next_board(board, pick_from, drop_at)
+					#flipflop = !flipflop
+					#print("tiger moved")
 
 
 

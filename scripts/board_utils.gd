@@ -124,6 +124,8 @@ static func make_next_board(board_state: mcts_node, initial_position: int, final
 	copied_board.children = [] as Array[mcts_node]
 	copied_board.parent = board_state
 	copied_board.n = 0
+	copied_board.t = 0
+	copied_board.UCB1 = 0
 	if(player_role == 'g'):
 		var goats_on_board = copied_board.game_state_array.count('g')
 		var total_goats_placed = goats_on_board + copied_board.dead_goat_count
@@ -162,4 +164,47 @@ static func make_next_board(board_state: mcts_node, initial_position: int, final
 						copied_board.move_count += 1
 						copied_board.player_role = 'g'
 	return copied_board
+	
+static func get_next_board(board_state: mcts_node, initial_position: int, final_position: int):
+	assert(is_valid_move(board_state,initial_position,final_position))
+	var player_role = board_state.player_role
+	var final_game_state_array = board_state.game_state_array
+	if(player_role == 'g'):
+		var goats_on_board = board_state.game_state_array.count('g')
+		var total_goats_placed = goats_on_board + board_state.dead_goat_count
+		if(total_goats_placed < 15):
+			if(initial_position == final_position && 
+			 board_state.game_state_array[initial_position] == 'b'):
+				final_game_state_array[final_position] = 'g'
+		else:
+			if(board_state.game_state_array[initial_position] == 'g' && 
+			board_state.game_state_array[final_position] == 'b' && 
+			board_connectivity[initial_position].find(final_position) != -1):
+				final_game_state_array[final_position] =  'g'
+				final_game_state_array[initial_position] =  'b'
+	else:
+		if(board_state.game_state_array[initial_position] == 't' &&
+		 board_connectivity[initial_position].find(final_position) != -1 &&
+		 board_state.game_state_array[final_position] == 'b'):		
+				final_game_state_array[final_position] =  't'
+				final_game_state_array[initial_position] =  'b'
+		else:
+			if(board_state.game_state_array[initial_position] == 't'):
+				for jumps in tiger_jumps[initial_position]:
+					if(jumps[1] == final_position &&
+					 board_state.game_state_array[jumps[0]] == 'g' &&
+					 board_state.game_state_array[jumps[1]] == 'b'):
+						final_game_state_array[final_position] =  't'
+						final_game_state_array[initial_position] =  'b'
+						final_game_state_array[jumps[0]] = 'b'
+	for i in range(board_state.children.size()):
+		var flag = 0
+		for j in range(board_state.children[i].game_state_array.size()):
+			if(board_state.children[i].game_state_array[j] != final_game_state_array[j]):
+				flag = 1
+				break;
+		if(flag == 0):
+			return board_state.children[i]
+	return make_next_board(board_state,initial_position,final_position)
+	
 	

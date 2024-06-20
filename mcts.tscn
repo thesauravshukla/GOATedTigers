@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://d38a5ebmpwcib"]
+
+[ext_resource type="Script" path="res://scripts/mcts.gd" id="2_c5vl2"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_3eixr"]
+load_path = "res://.godot/imported/2024-06-17 00.24.49.jpg-9d08be28acacb4545568fccea52e0e47.ctex"
+
+[node name="Node2D" type="Node2D"]
+metadata/_edit_horizontal_guides_ = [-11.0]
+
+[node name="2024-06-1700_24_49" type="Sprite2D" parent="."]
+position = Vector2(608, 340)
+scale = Vector2(1.17241, 1.08725)
+texture = SubResource("CompressedTexture2D_3eixr")
+script = ExtResource("2_c5vl2")
