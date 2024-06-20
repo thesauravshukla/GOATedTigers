@@ -3,7 +3,7 @@ extends Node2D
 # Called when the node enters the scene tree for the first time.
 class_name board_utils
 
-const max_moves: int = 50
+const max_moves: int = 500
 const tiger_jumps: Array[Array] = \
 [
 	[[2,8],[3,9],[4,10],[5,11]],    #0
@@ -82,7 +82,7 @@ static func this_tiger_trapped(board_state: mcts_node, index: int) -> bool:
 			return false
 	return true
 
-func is_valid_move(board_state: mcts_node, initial_position: int, final_position: int):
+static func is_valid_move(board_state: mcts_node, initial_position: int, final_position: int):
 	var player_role = board_state.player_role
 	if(player_role == 'g'):
 		var goats_on_board = board_state.game_state_array.count('g')
@@ -117,11 +117,11 @@ static func deepcopy(board_state: mcts_node):
 	copied_board_state.UCB1 = board_state.UCB1
 	return copied_board_state
 	
-func make_next_board(board_state: mcts_node, initial_position: int, final_position: int):
+static func make_next_board(board_state: mcts_node, initial_position: int, final_position: int):
 	assert(is_valid_move(board_state,initial_position,final_position))
 	var player_role = board_state.player_role
 	var copied_board = deepcopy(board_state)
-	copied_board.children = []
+	copied_board.children = [] as Array[mcts_node]
 	copied_board.parent = board_state
 	copied_board.n = 0
 	if(player_role == 'g'):

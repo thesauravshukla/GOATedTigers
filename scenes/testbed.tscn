@@ -1,9 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://oi25ty8otpe"]
+[gd_scene load_steps=8 format=3 uid="uid://oi25ty8otpe"]
 
 [ext_resource type="Texture2D" uid="uid://c2r08etwurihr" path="res://textures/testbed_bg.png" id="1_m32ba"]
 [ext_resource type="Script" path="res://scripts/testbed_ctrl.gd" id="2_v2bx1"]
-[ext_resource type="PackedScene" path="res://scenes/tiger_sprite.tscn" id="3_jpr32"]
-[ext_resource type="PackedScene" path="res://scenes/goat_sprite.tscn" id="4_2edjh"]
+[ext_resource type="PackedScene" uid="uid://bown6ajokcrta" path="res://scenes/tiger_sprite.tscn" id="3_jpr32"]
+[ext_resource type="PackedScene" uid="uid://cd1422wux3a6a" path="res://scenes/goat_sprite.tscn" id="4_2edjh"]
+[ext_resource type="Script" path="res://scripts/pos_button.gd" id="5_o00ao"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_42ab4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fcse5"]
+bg_color = Color(0, 0.501961, 0.772549, 0.32549)
 
 [node name="Node2D" type="Node2D"]
 
@@ -20,12 +26,36 @@ position = Vector2(1.58355, -627.698)
 
 [node name="GoatSprite" parent="TestbedBg/pos_0" instance=ExtResource("4_2edjh")]
 
+[node name="Button" type="Button" parent="TestbedBg/pos_0"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
+
 [node name="pos_1" type="Node2D" parent="TestbedBg"]
 position = Vector2(-619.532, -215.871)
 
 [node name="TigerFace" parent="TestbedBg/pos_1" instance=ExtResource("3_jpr32")]
 
 [node name="GoatSprite" parent="TestbedBg/pos_1" instance=ExtResource("4_2edjh")]
+
+[node name="Button" type="Button" parent="TestbedBg/pos_1"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
 
 [node name="pos_2" type="Node2D" parent="TestbedBg"]
 position = Vector2(-194.203, -217.222)
@@ -34,12 +64,36 @@ position = Vector2(-194.203, -217.222)
 
 [node name="GoatSprite" parent="TestbedBg/pos_2" instance=ExtResource("4_2edjh")]
 
+[node name="Button" type="Button" parent="TestbedBg/pos_2"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
+
 [node name="pos_3" type="Node2D" parent="TestbedBg"]
 position = Vector2(-61.8782, -217.222)
 
 [node name="TigerFace" parent="TestbedBg/pos_3" instance=ExtResource("3_jpr32")]
 
 [node name="GoatSprite" parent="TestbedBg/pos_3" instance=ExtResource("4_2edjh")]
+
+[node name="Button" type="Button" parent="TestbedBg/pos_3"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
 
 [node name="pos_4" type="Node2D" parent="TestbedBg"]
 position = Vector2(65.0454, -217.222)
@@ -48,12 +102,36 @@ position = Vector2(65.0454, -217.222)
 
 [node name="GoatSprite" parent="TestbedBg/pos_4" instance=ExtResource("4_2edjh")]
 
+[node name="Button" type="Button" parent="TestbedBg/pos_4"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
+
 [node name="pos_5" type="Node2D" parent="TestbedBg"]
 position = Vector2(189.035, -213.34)
 
 [node name="TigerFace" parent="TestbedBg/pos_5" instance=ExtResource("3_jpr32")]
 
 [node name="GoatSprite" parent="TestbedBg/pos_5" instance=ExtResource("4_2edjh")]
+
+[node name="Button" type="Button" parent="TestbedBg/pos_5"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
 
 [node name="pos_6" type="Node2D" parent="TestbedBg"]
 position = Vector2(622.699, -221.272)
@@ -62,12 +140,36 @@ position = Vector2(622.699, -221.272)
 
 [node name="GoatSprite" parent="TestbedBg/pos_6" instance=ExtResource("4_2edjh")]
 
+[node name="Button" type="Button" parent="TestbedBg/pos_6"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
+
 [node name="pos_7" type="Node2D" parent="TestbedBg"]
 position = Vector2(-653.522, 37.807)
 
 [node name="TigerFace" parent="TestbedBg/pos_7" instance=ExtResource("3_jpr32")]
 
 [node name="GoatSprite" parent="TestbedBg/pos_7" instance=ExtResource("4_2edjh")]
+
+[node name="Button" type="Button" parent="TestbedBg/pos_7"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
 
 [node name="pos_8" type="Node2D" parent="TestbedBg"]
 position = Vector2(-298.405, 41.8578)
@@ -76,12 +178,36 @@ position = Vector2(-298.405, 41.8578)
 
 [node name="GoatSprite" parent="TestbedBg/pos_8" instance=ExtResource("4_2edjh")]
 
+[node name="Button" type="Button" parent="TestbedBg/pos_8"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
+
 [node name="pos_9" type="Node2D" parent="TestbedBg"]
 position = Vector2(-110.721, 37.807)
 
 [node name="TigerFace" parent="TestbedBg/pos_9" instance=ExtResource("3_jpr32")]
 
 [node name="GoatSprite" parent="TestbedBg/pos_9" instance=ExtResource("4_2edjh")]
+
+[node name="Button" type="Button" parent="TestbedBg/pos_9"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
 
 [node name="pos_10" type="Node2D" parent="TestbedBg"]
 position = Vector2(117.472, 33.7563)
@@ -90,12 +216,36 @@ position = Vector2(117.472, 33.7563)
 
 [node name="GoatSprite" parent="TestbedBg/pos_10" instance=ExtResource("4_2edjh")]
 
+[node name="Button" type="Button" parent="TestbedBg/pos_10"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
+
 [node name="pos_11" type="Node2D" parent="TestbedBg"]
 position = Vector2(314.608, 39.1573)
 
 [node name="TigerFace" parent="TestbedBg/pos_11" instance=ExtResource("3_jpr32")]
 
 [node name="GoatSprite" parent="TestbedBg/pos_11" instance=ExtResource("4_2edjh")]
+
+[node name="Button" type="Button" parent="TestbedBg/pos_11"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
 
 [node name="pos_12" type="Node2D" parent="TestbedBg"]
 position = Vector2(664.323, 39.1573)
@@ -104,12 +254,36 @@ position = Vector2(664.323, 39.1573)
 
 [node name="GoatSprite" parent="TestbedBg/pos_12" instance=ExtResource("4_2edjh")]
 
+[node name="Button" type="Button" parent="TestbedBg/pos_12"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
+
 [node name="pos_13" type="Node2D" parent="TestbedBg"]
 position = Vector2(-687.278, 290.304)
 
 [node name="TigerFace" parent="TestbedBg/pos_13" instance=ExtResource("3_jpr32")]
 
 [node name="GoatSprite" parent="TestbedBg/pos_13" instance=ExtResource("4_2edjh")]
+
+[node name="Button" type="Button" parent="TestbedBg/pos_13"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
 
 [node name="pos_14" type="Node2D" parent="TestbedBg"]
 position = Vector2(-407.776, 295.705)
@@ -118,12 +292,36 @@ position = Vector2(-407.776, 295.705)
 
 [node name="GoatSprite" parent="TestbedBg/pos_14" instance=ExtResource("4_2edjh")]
 
+[node name="Button" type="Button" parent="TestbedBg/pos_14"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
+
 [node name="pos_15" type="Node2D" parent="TestbedBg"]
 position = Vector2(-149.878, 295.705)
 
 [node name="TigerFace" parent="TestbedBg/pos_15" instance=ExtResource("3_jpr32")]
 
 [node name="GoatSprite" parent="TestbedBg/pos_15" instance=ExtResource("4_2edjh")]
+
+[node name="Button" type="Button" parent="TestbedBg/pos_15"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
 
 [node name="pos_16" type="Node2D" parent="TestbedBg"]
 position = Vector2(160.68, 295.705)
@@ -132,12 +330,36 @@ position = Vector2(160.68, 295.705)
 
 [node name="GoatSprite" parent="TestbedBg/pos_16" instance=ExtResource("4_2edjh")]
 
+[node name="Button" type="Button" parent="TestbedBg/pos_16"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
+
 [node name="pos_17" type="Node2D" parent="TestbedBg"]
 position = Vector2(433.431, 295.705)
 
 [node name="TigerFace" parent="TestbedBg/pos_17" instance=ExtResource("3_jpr32")]
 
 [node name="GoatSprite" parent="TestbedBg/pos_17" instance=ExtResource("4_2edjh")]
+
+[node name="Button" type="Button" parent="TestbedBg/pos_17"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
 
 [node name="pos_18" type="Node2D" parent="TestbedBg"]
 position = Vector2(702.13, 284.903)
@@ -146,12 +368,36 @@ position = Vector2(702.13, 284.903)
 
 [node name="GoatSprite" parent="TestbedBg/pos_18" instance=ExtResource("4_2edjh")]
 
+[node name="Button" type="Button" parent="TestbedBg/pos_18"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
+
 [node name="pos_19" type="Node2D" parent="TestbedBg"]
 position = Vector2(-564.405, 579.258)
 
 [node name="TigerFace" parent="TestbedBg/pos_19" instance=ExtResource("3_jpr32")]
 
 [node name="GoatSprite" parent="TestbedBg/pos_19" instance=ExtResource("4_2edjh")]
+
+[node name="Button" type="Button" parent="TestbedBg/pos_19"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
 
 [node name="pos_20" type="Node2D" parent="TestbedBg"]
 position = Vector2(-199.837, 595.461)
@@ -160,6 +406,18 @@ position = Vector2(-199.837, 595.461)
 
 [node name="GoatSprite" parent="TestbedBg/pos_20" instance=ExtResource("4_2edjh")]
 
+[node name="Button" type="Button" parent="TestbedBg/pos_20"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
+
 [node name="pos_21" type="Node2D" parent="TestbedBg"]
 position = Vector2(207.939, 579.258)
 
@@ -167,9 +425,37 @@ position = Vector2(207.939, 579.258)
 
 [node name="GoatSprite" parent="TestbedBg/pos_21" instance=ExtResource("4_2edjh")]
 
+[node name="Button" type="Button" parent="TestbedBg/pos_21"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
+
 [node name="pos_22" type="Node2D" parent="TestbedBg"]
 position = Vector2(556.303, 600.862)
 
 [node name="TigerFace" parent="TestbedBg/pos_22" instance=ExtResource("3_jpr32")]
 
 [node name="GoatSprite" parent="TestbedBg/pos_22" instance=ExtResource("4_2edjh")]
+
+[node name="Button" type="Button" parent="TestbedBg/pos_22"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -52.8931
+offset_top = -54.1788
+offset_right = 50.1069
+offset_bottom = 48.8212
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_42ab4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fcse5")
+script = ExtResource("5_o00ao")
+
+[node name="Player" type="Node2D" parent="TestbedBg"]
+position = Vector2(-791.247, -738.587)
+scale = Vector2(1.35025, 1.35025)

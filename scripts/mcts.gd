@@ -2,7 +2,7 @@ extends Node2D
 # Called when the node enters the scene tree for the first time.
 class_name mcts
 
-var max_moves: int = 50
+
 
 #constants
 var epsilon: float = 0.001
@@ -14,8 +14,8 @@ var draw_weight: float = 0	#reward for a draw result
 func MCTS_SIM(board_state: mcts_node,iteration_count: int) -> mcts_node:
 	#if game terminated then return board_state
 	if(board_utils.is_game_terminated(board_state)):
-		return board_state
-		
+		breakpoint
+	
 	var player_type = board_state.player_role
 	for iteration in iteration_count :
 		var leaf = board_state
@@ -231,7 +231,7 @@ func reward(board_state: mcts_node, player_type: String) -> float:
 	if(player_type == 'g'):
 		if(board_state.dead_goat_count >= 5):
 			return loss_weight
-		elif(board_state.move_count > max_moves):
+		elif(board_state.move_count > board_utils.max_moves):
 			return draw_weight
 		elif(board_utils.all_tigers_trapped(board_state)):
 			return win_weight
@@ -239,7 +239,7 @@ func reward(board_state: mcts_node, player_type: String) -> float:
 	elif(player_type == 't'):
 		if(board_state.dead_goat_count >= 5):
 			return win_weight
-		elif(board_state.move_count > max_moves):
+		elif(board_state.move_count > board_utils.max_moves):
 			return draw_weight
 		elif(board_utils.all_tigers_trapped(board_state)):
 			return loss_weight
