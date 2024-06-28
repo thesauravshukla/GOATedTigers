@@ -1,0 +1,217 @@
+[gd_scene load_steps=10 format=3 uid="uid://xwh2q0q72edw"]
+
+[ext_resource type="Script" path="res://scripts/game.gd" id="1_dfptq"]
+[ext_resource type="Texture2D" uid="uid://wq737jb35imq" path="res://textures/gameBackground.jpg" id="1_vvp1s"]
+[ext_resource type="Script" path="res://scenes/main.gd" id="1_wiwuc"]
+[ext_resource type="PackedScene" uid="uid://nuacyyhwaavd" path="res://scenes/pos.tscn" id="2_1u5cd"]
+
+[sub_resource type="Theme" id="Theme_6og4v"]
+default_font_size = 75
+
+[sub_resource type="SystemFont" id="SystemFont_4lyma"]
+
+[sub_resource type="Theme" id="Theme_kvyun"]
+default_font = SubResource("SystemFont_4lyma")
+default_font_size = 25
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p2k61"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SystemFont" id="SystemFont_mbtia"]
+
+[node name="Main" type="Node2D" node_paths=PackedStringArray("main_menu", "rules_panel", "QuitButton", "PlayTigerButton", "PlayGoatButton", "_game")]
+script = ExtResource("1_wiwuc")
+main_menu = NodePath("CanvasLayer/PanelContainerMainMenu")
+rules_panel = NodePath("CanvasLayer/PanelContainerRules")
+QuitButton = NodePath("CanvasLayer/PanelContainerMainMenu/VBoxContainer/HBoxContainer4/QuitButton")
+PlayTigerButton = NodePath("CanvasLayer/PanelContainerMainMenu/VBoxContainer/HBoxContainer/PlayTigerButton")
+PlayGoatButton = NodePath("CanvasLayer/PanelContainerMainMenu/VBoxContainer/HBoxContainer2/PlayGoatButton")
+_game = NodePath("Game/GameBackground")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PanelContainerMainMenu" type="PanelContainer" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -514.5
+offset_top = -312.0
+offset_right = 514.5
+offset_bottom = 312.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = SubResource("Theme_6og4v")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PanelContainerMainMenu"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/PanelContainerMainMenu/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlayTigerButton" type="Button" parent="CanvasLayer/PanelContainerMainMenu/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Play as Tigers"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/PanelContainerMainMenu/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlayGoatButton" type="Button" parent="CanvasLayer/PanelContainerMainMenu/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Play as Goats"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CanvasLayer/PanelContainerMainMenu/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="QuitButton" type="Button" parent="CanvasLayer/PanelContainerMainMenu/VBoxContainer/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quit"
+
+[node name="PanelContainerRules" type="PanelContainer" parent="CanvasLayer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -521.0
+offset_top = -369.5
+offset_right = 521.0
+offset_bottom = 369.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme = SubResource("Theme_kvyun")
+
+[node name="Panel" type="Panel" parent="CanvasLayer/PanelContainerRules"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_p2k61")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/PanelContainerRules"]
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/PanelContainerRules/MarginContainer"]
+layout_mode = 2
+text = "This is a traditional south Indian asymmetric board game. You can play as goats or tigers. 
+
+Tigers must kill 5 goats to win.
+Goats must surround tigers such that they cannot move to win. 
+
+The tigers can move as soon as the game starts. Goats cannot move until 15 goat game pieces are placed on the board.
+
+All pieces can only move from one circle to the next empty circle along the lines. Only one move can be made at each turn.
+
+A tiger can kill a goat by jumping over it along the line (like checkers). The circle next to the goat where the tiger lands must be empty. A tiger can only kill one goat at a time.
+
+A goat blocks a tiger by surrounding it, such that the tiger cannot move/jump anywhere."
+
+[node name="PanelContainerHUD" type="PanelContainer" parent="CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -51.0
+offset_right = 327.0
+grow_vertical = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/PanelContainerHUD"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/PanelContainerHUD/PanelContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_mbtia")
+theme_override_font_sizes/font_size = 21
+text = "Press tab for help."
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Game" type="Node2D" parent="."]
+
+[node name="GameBackground" type="Sprite2D" parent="Game"]
+visible = false
+texture = ExtResource("1_vvp1s")
+script = ExtResource("1_dfptq")
+
+[node name="pos_0" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(11, -512)
+
+[node name="pos_1" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(-519, -157)
+
+[node name="pos_2" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(-181, -157)
+
+[node name="pos_3" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(-62, -157)
+
+[node name="pos_4" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(84, -154)
+
+[node name="pos_5" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(206, -157)
+
+[node name="pos_6" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(525, -151)
+
+[node name="pos_7" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(-519, -20)
+
+[node name="pos_8" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(-257, -19)
+
+[node name="pos_9" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(-90, -19)
+
+[node name="pos_10" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(115, -19)
+
+[node name="pos_11" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(279, -16)
+
+[node name="pos_12" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(525, -19)
+
+[node name="pos_13" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(-519, 124)
+
+[node name="pos_14" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(-330, 121)
+
+[node name="pos_15" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(-119, 124)
+
+[node name="pos_16" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(142, 121)
+
+[node name="pos_17" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(353, 121)
+
+[node name="pos_18" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(524, 121)
+
+[node name="pos_19" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(-511, 460)
+
+[node name="pos_20" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(-186, 459)
+
+[node name="pos_21" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(206, 459)
+
+[node name="pos_22" parent="Game/GameBackground" instance=ExtResource("2_1u5cd")]
+position = Vector2(529, 456)

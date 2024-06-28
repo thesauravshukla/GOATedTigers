@@ -8,7 +8,7 @@ class_name mcts
 var epsilon: float = 0.001
 var win_weight: float = 1		#reward for a win result
 var loss_weight: float = -1	#reward for a loss result
-var draw_weight: float = 0	#reward for a draw result
+var draw_weight: float = -1	#reward for a draw result
 
 
 func MCTS_SIM(board_state: mcts_node,iteration_count: int) -> mcts_node:
@@ -23,7 +23,7 @@ func MCTS_SIM(board_state: mcts_node,iteration_count: int) -> mcts_node:
 		#checking if current node is a leaf node
 		if(leaf.children.is_empty()):
 			
-			if(leaf.n != 0):
+			if(leaf.n != 0 and not board_utils.is_game_terminated(leaf)):
 				node_expansion(leaf)
 				
 				#rollout will be carried out on the first children of the current node

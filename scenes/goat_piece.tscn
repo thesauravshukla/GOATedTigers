@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://ccxcdpfvatjht"]
+
+[ext_resource type="Texture2D" uid="uid://dwc8yhpuo11hk" path="res://textures/goat_piece.png" id="1_x21nn"]
+
+[node name="GoatPiece" type="Sprite2D"]
+scale = Vector2(0.147321, 0.147321)
+texture = ExtResource("1_x21nn")

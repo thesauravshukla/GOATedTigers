@@ -208,3 +208,16 @@ static func get_next_board(board_state: mcts_node, initial_position: int, final_
 	return make_next_board(board_state,initial_position,final_position)
 	
 	
+static func _make_fresh_board() -> mcts_node:
+	var board = mcts_node.new()
+	board.game_state_array = ["t", "b", "b", "t", "t", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b"] as Array[String]
+	board.player_role = 'g'
+	board.UCB1 = INF
+	board.children = [] as Array[mcts_node]
+	board.parent = null
+	board.move_count = 0
+	board.dead_goat_count = 0
+	board.n = 0
+	board.t = 0
+	
+	return board	

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://2e7mve4eibsb"]
+
+[ext_resource type="Texture2D" uid="uid://csn7dwwtt5kxd" path="res://textures/tiger_piece.png" id="1_5y2c2"]
+
+[node name="TigerPiece" type="Sprite2D"]
+scale = Vector2(0.169379, 0.169379)
+texture = ExtResource("1_5y2c2")
